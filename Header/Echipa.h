@@ -21,13 +21,41 @@ private:
     std::vector<Jucator> m_atacanti;
 
  //Calculează media OVR pentru o lista specifica de jucatori pentru fiecare pozitie.
-    [[nodiscard]] double calculeazaMediePozitie(const std::vector<Jucator>& jucatori) const;
+    [[nodiscard]] double calculeazaMediePozitie(const std::vector<Jucator>& jucatori) const
+    {
+        if (jucatori.empty()) {
+            return 60.0; // O medie de penalizare
+        }
+        double suma = 0.0;
+        for (const Jucator& j : jucatori) {
+            suma += j.getOVR();
+        }
+        return suma / static_cast<double>(jucatori.size());
+    }
+
 
      //Calculează OVR-ul total al echipei.
-    [[nodiscard]] double calculeazaOVR() const;
+    [[nodiscard]] double calculeazaOVR() const
+    {
+        double mediePortari = calculeazaMediePozitie(m_portari);
+        double medieFundasi = calculeazaMediePozitie(m_fundasi);
+        double medieMijlocasi = calculeazaMediePozitie(m_mijlocasi);
+        double medieAtacanti = calculeazaMediePozitie(m_atacanti);
+
+        // Media mediilor
+        return (mediePortari + medieFundasi + medieMijlocasi + medieAtacanti) / 4.0;
+    }
 
     //modifica moralul intr-un mod controlat(adica il mentine intre 0 si 100)
-    void modificaMoral(int valoare);
+    void modificaMoral(int valoare)
+    {
+        this->m_moral += valoare;
+        if (this->m_moral > 100) {
+            this->m_moral = 100;
+        } else if (this->m_moral < 0) {
+            this->m_moral = 0;
+        }
+    }
 
 public:
     [[nodiscard]] std::string getNume() const { return this->m_nume; }
@@ -131,12 +159,55 @@ void afiseazaLot() const
     return pozitieInClasament <= this->m_obiectiv;
 }
     Echipa(std::string nume, int obiectiv): m_nume{std::move(nume)}, m_obiectiv{obiectiv} {}
-    Echipa(const Echipa& alta); // Constructor de copiere
-    Echipa& operator=(const Echipa& alta); // Operator= de copiere
-    ~Echipa() {
-        // Gol, deoarece std::vector si std::string isi gestionează memoria (am gasit in recapitularea c++ ;D )
+    // Constructor de copiere
+    Echipa(const Echipa& alta)
+    {
+        this->m_nume = alta.m_nume;
+        this->m_obiectiv = alta.m_obiectiv;
+        this->m_puncteClasament = alta.m_puncteClasament;
+        this->m_puncteUpgrade = alta.m_puncteUpgrade;
+        this->m_nivelStadion = alta.m_nivelStadion;
+        this->m_moral = alta.m_moral;
+        this->m_portari = alta.m_portari;
+        this->m_fundasi = alta.m_fundasi;
+        this->m_mijlocasi = alta.m_mijlocasi;
+        this->m_atacanti = alta.m_atacanti;
     }
 
+    // Operator= de copiere
+    Echipa& operator=(const Echipa& alta)
+    {
+        if (this == &alta)
+        {
+            return *this;
+        }
+        this->m_nume = alta.m_nume;
+        this->m_obiectiv = alta.m_obiectiv;
+        this->m_puncteClasament = alta.m_puncteClasament;
+        this->m_puncteUpgrade = alta.m_puncteUpgrade;
+        this->m_nivelStadion = alta.m_nivelStadion;
+        this->m_moral = alta.m_moral;
+        this->m_portari = alta.m_portari;
+        this->m_fundasi = alta.m_fundasi;
+        this->m_mijlocasi = alta.m_mijlocasi;
+        this->m_atacanti = alta.m_atacanti;
+        return *this;
+    }
+    ~Echipa() = default;
+        // Gol, deoarece std::vector si std::string isi gestionează memoria (am gasit in recapitularea c++ ;D )
 
-    friend std::ostream& operator<<(std::ostream& os, const Echipa& e);
+    friend std::ostream& operator<<(std::ostream& os, const Echipa& e)
+    {
+        // Setăm formatarea OVR-ului
+        os << std::fixed << std::setprecision(2);
+        os << "Echipa: " << e.getNume()
+           << " OVR: " << e.getOVR()
+           << " Obiectiv: Loc " << e.getObiectiv()
+           << " Puncte: " << e.getPuncteClasament() << "\n"
+           << " Moral: " << e.getMoral() << "/100"
+           << " Nivel Stadion : " << e.getNivelStadion()
+           << " Puncte Upgrade: " << e.getPuncteUpgrade();
+
+        return os;
+    }
 };

@@ -36,11 +36,21 @@ public:
     if (this->m_ovr < 1) this->m_ovr = 1;
     if (this->m_varsta < 16) this->m_varsta = 16;
 }
-    friend std::ostream& operator<<(std::ostream& os, const Jucator& j);
+    // Implementare operator<<
+    friend std::ostream& operator<<(std::ostream& os, const Jucator& j)
+     {
+        os << "[" << j.getPozitieCaString() << "] "
+           << j.m_nume
+           << " (OVR: " << j.m_ovr << ")"
+           << " - Varsta: " << j.m_varsta;
+        return os;
+    }
 
 private:
-    [[nodiscard]] std::string getPozitieCaString() const {
-        switch (this->m_pozitie) {
+    [[nodiscard]] std::string getPozitieCaString() const
+    {
+        switch (this->m_pozitie)
+            {
             case PozitieJucator::PORTAR:  return "Portar";
             case PozitieJucator::FUNDAS:  return "Fundas";
             case PozitieJucator::MIJLOCAS: return "Mijlocas";
