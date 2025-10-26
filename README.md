@@ -1,4 +1,4 @@
-# [Football Manager]
+# [Top Ballers]
 
 Bun venit la simulatorul meu de management al unei echipe de fotbal! Acesta este un proiect creat în C++ care îți permite să preiei rolul de manager al unei echipe de fotbal.
 
