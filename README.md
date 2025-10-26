@@ -1,4 +1,4 @@
-# [Football Manager]
+# [Top Ballers]
 
 Bun venit la simulatorul meu de management al unei echipe de fotbal! Acesta este un proiect creat în C++ care îți permite să preiei rolul de manager al unei echipe de fotbal.
 
@@ -126,7 +126,7 @@ cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DUSE_ASAN=ON
 La acest pas putem cere să generăm fișiere de proiect pentru diverse medii de lucru.
 
 
-2. Pasul de compilare
+1. Pasul de compilare
 ```sh
 cmake --build build --config Debug --parallel 6
 # sau ./scripts/cmake.sh build
@@ -135,7 +135,7 @@ cmake --build build --config Debug --parallel 6
 Cu opțiunea `parallel` specificăm numărul de fișiere compilate în paralel.
 
 
-3. Pasul de instalare (opțional)
+1. Pasul de instalare (opțional)
 ```sh
 cmake --install build --config Debug --prefix install_dir
 # sau ./scripts/cmake.sh install
@@ -151,19 +151,19 @@ conțin fișiere generate și nu ne ajută să le versionăm.
 
 Există mai multe variante:
 
-1. Din directorul de build (implicit `build`). Executabilul se află la locația `./build/oop` după ce a fost rulat pasul de compilare al proiectului (`./scripts/cmake.sh build` - pasul 2 de mai sus).
+1.Din directorul de build (implicit `build`). Executabilul se află la locația `./build/oop` după ce a fost rulat pasul de compilare al proiectului (`./scripts/cmake.sh build` - pasul 2 de mai sus).
 
 ```sh
 ./build/oop
 ```
 
-2. Din directorul `install_dir`. Executabilul se află la locația `./install_dir/bin/oop` după ce a fost rulat pasul de instalare (`./scripts/cmake.sh install` - pasul 3 de mai sus).
+2.Din directorul `install_dir`. Executabilul se află la locația `./install_dir/bin/oop` după ce a fost rulat pasul de instalare (`./scripts/cmake.sh install` - pasul 3 de mai sus).
 
 ```sh
 ./install_dir/bin/oop
 ```
 
-3. Rularea programului folosind Valgrind se poate face executând script-ul `./scripts/run_valgrind.sh` din rădăcina proiectului. Pe Windows acest script se poate rula folosind WSL (Windows Subsystem for Linux). Valgrind se poate rula în modul interactiv folosind: `RUN_INTERACTIVE=true ./scripts/run_valgrind.sh`
+3.Rularea programului folosind Valgrind se poate face executând script-ul `./scripts/run_valgrind.sh` din rădăcina proiectului. Pe Windows acest script se poate rula folosind WSL (Windows Subsystem for Linux). Valgrind se poate rula în modul interactiv folosind: `RUN_INTERACTIVE=true ./scripts/run_valgrind.sh`
 
 Implicit, nu se rulează interactiv, iar datele pentru `std::cin` sunt preluate din fișierul `tastatura.txt`.
 
@@ -173,7 +173,7 @@ RUN_INTERACTIVE=true ./scripts/run_valgrind.sh
 ./scripts/run_valgrind.sh
 ```
 
-4. Pentru a rula executabilul folosind ASan, este nevoie ca la pasul de configurare (vezi mai sus) să fie activat acest sanitizer. Ar trebui să meargă pe macOS și Linux. Pentru Windows, ar merge doar cu MSVC (nerecomandat).
+4.Pentru a rula executabilul folosind ASan, este nevoie ca la pasul de configurare (vezi mai sus) să fie activat acest sanitizer. Ar trebui să meargă pe macOS și Linux. Pentru Windows, ar merge doar cu MSVC (nerecomandat).
 
 Comanda este aceeași ca la pasul 1 sau 2. Nu merge combinat cu Valgrind.
 
