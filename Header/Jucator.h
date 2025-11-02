@@ -30,15 +30,25 @@ public:
     [[nodiscard]] int getOVR() const {
         return this->m_ovr;
     }
+
+    //Functie pentru a creste OVR-ul prin antrenament dupa meci
+    void imbunatatesteOVR(int puncte) {
+        this->m_ovr += puncte;
+        if (this->m_ovr > 99) {
+            this->m_ovr = 99; // Plafonare la 99
+        }
+    }
+
     Jucator(std::string nume, int varsta,PozitieJucator pozitie, int ovr): m_nume{std::move(nume)}, m_varsta{varsta}, m_pozitie{pozitie}, m_ovr{ovr}
     {
-    if (this->m_ovr > 99) this->m_ovr = 99;
-    if (this->m_ovr < 1) this->m_ovr = 1;
-    if (this->m_varsta < 16) this->m_varsta = 16;
-}
+        if (this->m_ovr > 99) this->m_ovr = 99;
+        if (this->m_ovr < 1) this->m_ovr = 1;
+        if (this->m_varsta < 16) this->m_varsta = 16;
+    }
+
     // Implementare operator<<
     friend std::ostream& operator<<(std::ostream& os, const Jucator& j)
-     {
+    {
         os << "[" << j.getPozitieCaString() << "] "
            << j.m_nume
            << " (OVR: " << j.m_ovr << ")"
@@ -50,7 +60,7 @@ private:
     [[nodiscard]] std::string getPozitieCaString() const
     {
         switch (this->m_pozitie)
-            {
+        {
             case PozitieJucator::PORTAR:  return "Portar";
             case PozitieJucator::FUNDAS:  return "Fundas";
             case PozitieJucator::MIJLOCAS: return "Mijlocas";

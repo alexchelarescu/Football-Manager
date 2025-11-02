@@ -47,23 +47,27 @@ int main() {
     std::cout <<"\n";
     std::cout << " Simulam o VICTOIRE (3 puncte, +5 upgrade) " << "\n";
     echipaMea.adaugaRezultatMeci(3, 5);
-    std::cout << echipaMea << "\n"; // Ar trebui sa vedem moral crescut, puncte adaugate
+
+    echipaMea.gestioneazaAntrenament();
+
+    std::cout << "\nStarea echipei dupa antrenament:\n" << echipaMea << "\n";
 
     std::cout <<"\n";
     std::cout << " Simulam o INFRANGERE (0 puncte, +1 upgrade) " << "\n";
     echipaMea.adaugaRezultatMeci(0, 1);
-    // Acum avem 5+1 = 6 puncte upgrade. Moralul ar trebui să scadă.
-    std::cout << echipaMea << "\n";
 
-    // Testare 'upgradeazaStadion' (ar trebui să esueze)
+    std::cout << "\nStarea echipei dupa al doilea antrenament:\n" << echipaMea << "\n";
+
+
+    // testare upgrade stadion (ar trebui sa esueze ca nu am destule puncte upgrade)
     std::cout <<"\n";
     std::cout << " Incercare UPGRADE STADION (Cost Nivel 2 = 10) " << "\n";
-    echipaMea.upgradeazaStadion(); // Avem 6 puncte, costul e 10. Va esua.
+    echipaMea.upgradeazaStadion();
 
     std::cout <<"\n";
     std::cout << " Incercare REFACE MORALUL (Cost = 5) " << "\n";
-    echipaMea.refaceMoralul(); // Avem 6 puncte, costul e 5. Va reuși.
-    std::cout << echipaMea << "\n"; // Ar trebui să avem 1 punct upgrade rămas
+    echipaMea.refaceMoralul(); // Are 6 puncte si costul e 5, deci va reusi.
+    std::cout << echipaMea << "\n"; // Ar trebui sa avem 1 punct upgrade ramas
 
     std::cout << "Puncte upgrade ramase: " << echipaMea.getPuncteUpgrade() <<"\n";
 
@@ -84,18 +88,20 @@ int main() {
     std::cout << "\n> 7.1 Test CONSTRUCTOR DE COPIERE (Echipa copie = echipaMea)" << "\n";
     Echipa echipaCopie = echipaMea;
 
-    echipaCopie.adaugaRezultatMeci(3, 100); // Adăugăm 100 puncte upgrade Copiei
 
-    std::cout << "   Originala: " << echipaMea.getNume() << " | Puncte UPG: " << echipaMea.getPuncteUpgrade() << "\n";
-    std::cout << "   Copia:     " << echipaCopie.getNume() << " | Puncte UPG: " << echipaCopie.getPuncteUpgrade() << "\n";
-    std::cout << "   (Diferenta de puncte demonstreaza o copie corecta\n";
+    std::cout << "   Antrenam DOAR copia... (va cere input)\n";
+    echipaCopie.gestioneazaAntrenament();
+
+    std::cout << "   Originala: " << echipaMea.getNume() << " | OVR: " << echipaMea.getOVR() << "\n";
+    std::cout << "   Copia:     " << echipaCopie.getNume() << " | OVR: " << echipaCopie.getOVR() << "\n";
+    std::cout << "   (Diferenta de OVR demonstreaza o copie corecta)\n";
 
     std::cout <<"\n";
     std::cout << " 7.2 Test OPERATOR DE ATRIBUIRE (echipaAtribuita = echipaMea) " <<"\n";
-    Echipa echipaAtribuita("Echipa Initiala", 99); // O echipă complet diferită
+    Echipa echipaAtribuita("Echipa Initiala", 99); // O echipa complet diferita
     std::cout << "   Inainte : " << echipaAtribuita << "\n";
 
-    echipaAtribuita = echipaMea; // Apelează Echipa& operator=(const Echipa& alta)
+    echipaAtribuita = echipaMea; // Apeleaza Echipa& operator=(const Echipa& alta)
 
     std::cout << "   Dupa : " << echipaAtribuita << "\n";
     return 0;

@@ -4,27 +4,27 @@
  #include <utility>
  #include <vector>
  #include "Jucator.h"
- #include <iomanip>
+ #include <limits> // necesar pentru validarea inputului (std::numeric_limits)
 
 class Echipa {
 private:
     std::string m_nume;
-    int m_obiectiv; // Locul minim în clasament
+    int m_obiectiv; // locul minim in clasament
     int m_puncteClasament{};
     int m_puncteUpgrade{};
-    int m_nivelStadion{}; // Nivelul stadionului (ex: 1, 2, 3...)
-    int m_moral{};        // Moralul echipei (0-100)
+    int m_nivelStadion{}; // nivelul stadionului (ex: 1, 2, 3...)
+    int m_moral{};        // moralul echipei (0-100)
 
     std::vector<Jucator> m_portari;
     std::vector<Jucator> m_fundasi;
     std::vector<Jucator> m_mijlocasi;
     std::vector<Jucator> m_atacanti;
 
- //Calculează media OVR pentru o lista specifica de jucatori pentru fiecare pozitie.
-    [[nodiscard]] double calculeazaMediePozitie(const std::vector<Jucator>& jucatori) const
+ // media OVR pentru o lista specifica de jucatori pentru fiecare pozitie
+    static double calculeazaMediePozitie(const std::vector<Jucator>& jucatori)
     {
         if (jucatori.empty()) {
-            return 60.0; // O medie de penalizare
+            return 60.0; // o medie de penalizare
         }
         double suma = 0.0;
         for (const Jucator& j : jucatori) {
@@ -34,7 +34,7 @@ private:
     }
 
 
-     //Calculează OVR-ul total al echipei.
+     // OVR-ul total al echipei
     [[nodiscard]] double calculeazaOVR() const
     {
         double mediePortari = calculeazaMediePozitie(m_portari);
@@ -42,11 +42,11 @@ private:
         double medieMijlocasi = calculeazaMediePozitie(m_mijlocasi);
         double medieAtacanti = calculeazaMediePozitie(m_atacanti);
 
-        // Media mediilor
+        // media mediilor
         return (mediePortari + medieFundasi + medieMijlocasi + medieAtacanti) / 4.0;
     }
 
-    //modifica moralul intr-un mod controlat(adica il mentine intre 0 si 100)
+    // modifica moralul intr-un mod controlat(adica il mentine intre 0 si 100)
     void modificaMoral(int valoare)
     {
         this->m_moral += valoare;
@@ -55,6 +55,51 @@ private:
         } else if (this->m_moral < 0) {
             this->m_moral = 0;
         }
+    }
+
+    // helper privat pentru antrenament manual
+    static void antreneazaJucatorSelectat(std::vector<Jucator>& jucatori, const std::string& numePozitie) {
+        if (jucatori.empty()) {
+            std::cout << " Nu exista jucatori pe pozitia: " << numePozitie << "\n";
+            return;
+        }
+
+        // afisare lista de jucatori
+        std::cout << "\n Alege un jucator pentru " << numePozitie << " (1-" << jucatori.size() << "):\n";
+        for (size_t i = 0; i < jucatori.size(); ++i) {
+            std::cout << "  " << (i + 1) << ". " << jucatori[i] << "\n";
+        }
+
+        int indexAles = 0;
+        bool inputValid = false;
+
+        // validez input
+        while (!inputValid) {
+            std::cout << " Selectie: ";
+            // verific daca inputul e nr
+            if (!(std::cin >> indexAles)) {
+                std::cout << "Eroare: Introduceti un numar.\n";
+                std::cin.clear(); // reseteaza starea de eroare a std::cin
+                // Curata buffer-ul de input (goleste ce a fost scris gresit)
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            } else if (indexAles < 1 || indexAles > static_cast<int>(jucatori.size())) {
+                // verific daca nr este in intervalul corespunzator jucatorilor pe care ii am in lot
+                std::cout << "Eroare: Numarul trebuie sa fie intre 1 si " << jucatori.size() << ".\n";
+            } else {
+                inputValid = true;
+            }
+        }
+
+        // pentru a curata buffer-ul dupa o citire reusita si pentru a preveni probleme la urmatorul cin
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+        // folosesc (&) pentru a modifica jucatorul original din vector
+        Jucator& jucatorAles = jucatori.at(indexAles - 1); // convertesc la index 0-based
+
+        int ovrVechi = jucatorAles.getOVR();
+        jucatorAles.imbunatatesteOVR(1); // functia din Jucator care creste ovr-ul prin antrenament
+
+        std::cout << " Dupa antrenament " << jucatorAles.getNume() << " a crescut la " << jucatorAles.getOVR() << " OVR (de la " << ovrVechi << " OVR).\n";
     }
 
 public:
@@ -136,10 +181,23 @@ void refaceMoralul()
     }
 }
 
+void gestioneazaAntrenament() {
+    std::cout << "\n *SESIUNE DE ANTRENAMENT* \n";
+    // apelez helper-ul privat pentru fiecare compartiment
+    // vectorii sunt trimisi ca referinta (&), deci pot fi modificati
+    antreneazaJucatorSelectat(m_portari, "Portari");
+    antreneazaJucatorSelectat(m_fundasi, "Fundasi");
+    antreneazaJucatorSelectat(m_mijlocasi, "Mijlocasi");
+    antreneazaJucatorSelectat(m_atacanti, "Atacanti");
+
+    // noul OVR al echipei
+    std::cout << "\n Noul OVR al echipei este: " << this->getOVR() << "\n\n";
+}
+
 void afiseazaLot() const
 {
-    // Folosim std::fixed și std::setprecision pentru a formata OVR-ul
-    std::cout << " LOTUL ECHIPEI: " << this->m_nume << " (OVR: " << std::fixed << std::setprecision(2) << this->getOVR() << ") \n";
+
+    std::cout << " LOTUL ECHIPEI: " << this->m_nume << " (OVR: " << this->getOVR() << ") \n";
 
     std::cout << "\n PORTARI (" << m_portari.size() << ") \n";
     for (const Jucator& j : m_portari) { std::cout << "  " << j << "\n"; }
@@ -159,6 +217,7 @@ void afiseazaLot() const
     return pozitieInClasament <= this->m_obiectiv;
 }
     Echipa(std::string nume, int obiectiv): m_nume{std::move(nume)}, m_obiectiv{obiectiv} {}
+
     // Constructor de copiere
     Echipa(const Echipa& alta)
     {
@@ -194,12 +253,11 @@ void afiseazaLot() const
         return *this;
     }
     ~Echipa() = default;
-        // Gol, deoarece std::vector si std::string isi gestionează memoria (am gasit in recapitularea c++ ;D )
+        // Gol, deoarece std::vector si std::string isi gestioneaza memoria (am gasit in recapitularea c++ ;D )
 
     friend std::ostream& operator<<(std::ostream& os, const Echipa& e)
     {
-        // Setăm formatarea OVR-ului
-        os << std::fixed << std::setprecision(2);
+        // formatarea OVR-ului
         os << "Echipa: " << e.getNume()
            << " OVR: " << e.getOVR()
            << " Obiectiv: Loc " << e.getObiectiv()
