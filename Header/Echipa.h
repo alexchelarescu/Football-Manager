@@ -5,6 +5,7 @@
  #include <vector>
  #include "Jucator.h"
  #include <limits> // necesar pentru validarea inputului (std::numeric_limits)
+ #include <iomanip> // NOU: Adăugat pentru std::fixed și std::setprecision
 
 class Echipa {
 private:
@@ -191,27 +192,11 @@ void gestioneazaAntrenament() {
     antreneazaJucatorSelectat(m_atacanti, "Atacanti");
 
     // noul OVR al echipei
-    std::cout << "\n Noul OVR al echipei este: " << this->getOVR() << "\n\n";
+    std::cout << "\n Noul OVR al echipei este: " << std::fixed << std::setprecision(2) << this->getOVR() << "\n\n";
 }
 
-void afiseazaLot() const
-{
-
-    std::cout << " LOTUL ECHIPEI: " << this->m_nume << " (OVR: " << this->getOVR() << ") \n";
-
-    std::cout << "\n PORTARI (" << m_portari.size() << ") \n";
-    for (const Jucator& j : m_portari) { std::cout << "  " << j << "\n"; }
-
-    std::cout << "\n FUNDASI (" << m_fundasi.size() << ") \n";
-    for (const Jucator& j : m_fundasi) { std::cout << "  " << j << "\n"; }
-
-    std::cout << "\n MIJLOCASI (" << m_mijlocasi.size() << ") \n";
-    for (const Jucator& j : m_mijlocasi) { std::cout << "  " << j << "\n"; }
-
-    std::cout << "\n ATACANTI (" << m_atacanti.size() << ") \n";
-    for (const Jucator& j : m_atacanti) { std::cout << "  " << j << "\n"; }
-    std::cout << "\n\n";
-}
+// ȘTERS: Funcția afiseazaLot() a fost eliminată
+// void afiseazaLot() const { ... }
 
 [[nodiscard]] bool verificaObiectiv(int pozitieInClasament) const {
     return pozitieInClasament <= this->m_obiectiv;
@@ -255,16 +240,38 @@ void afiseazaLot() const
     ~Echipa() = default;
         // Gol, deoarece std::vector si std::string isi gestioneaza memoria (am gasit in recapitularea c++ ;D )
 
+
+    //  op<< acum contine si sumarul si lotul
     friend std::ostream& operator<<(std::ostream& os, const Echipa& e)
     {
-        // formatarea OVR-ului
-        os << "Echipa: " << e.getNume()
-           << " OVR: " << e.getOVR()
-           << " Obiectiv: Loc " << e.getObiectiv()
-           << " Puncte: " << e.getPuncteClasament() << "\n"
-           << " Moral: " << e.getMoral() << "/100"
-           << " Nivel Stadion : " << e.getNivelStadion()
-           << " Puncte Upgrade: " << e.getPuncteUpgrade();
+        // set la formatarea OVR-ului
+        os << std::fixed << std::setprecision(2);
+        os << "Echipa: " << e.getNume()<<"\n"
+           << "  OVR: " << e.getOVR()
+           << " | Obiectiv: Loc " << e.getObiectiv()<<"\n"
+           << "  Puncte: " << e.getPuncteClasament()
+           << " | Puncte Upgrade: " << e.getPuncteUpgrade()<<"\n"
+           << "  Moral: " << e.getMoral() << "/100 "
+           << " | Nivel Stadion: " << e.getNivelStadion();
+
+
+
+        // partea de lot (compunerea apelurilor)
+        // logica mutata din afiseazaLot poate respect cerinta cu op<<
+        os << "\n\n LOTUL ECHIPEI: " << e.m_nume << " (OVR: " << e.getOVR() << ") \n"; // OVR formatat
+
+        os << "\n PORTARI (" << e.m_portari.size() << ") \n";
+        for (const Jucator& j : e.m_portari) { os << "  " << j << "\n"; }
+
+        os << "\n FUNDASI (" << e.m_fundasi.size() << ") \n";
+        for (const Jucator& j : e.m_fundasi) { os << "  " << j << "\n"; }
+
+        os << "\n MIJLOCASI (" << e.m_mijlocasi.size() << ") \n";
+        for (const Jucator& j : e.m_mijlocasi) { os << "  " << j << "\n"; }
+
+        os << "\n ATACANTI (" << e.m_atacanti.size() << ") \n";
+        for (const Jucator& j : e.m_atacanti) { os << "  " << j << "\n"; }
+        os << "\n\n";
 
         return os;
     }

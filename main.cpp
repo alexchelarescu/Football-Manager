@@ -36,11 +36,6 @@ int main() {
     std::cout << " 4. Stare Initiala Echipa " << "\n";
     std::cout << echipaMea << "\n";
 
-
-    std::cout <<"\n";
-    std::cout << " Testare afiseazaLot() " << "\n";;
-    echipaMea.afiseazaLot();
-
     std::cout <<"\n";
     std::cout << " 5. Simulare Evenimente Sezon " <<  "\n";
 
@@ -99,10 +94,10 @@ int main() {
     std::cout <<"\n";
     std::cout << " 7.2 Test OPERATOR DE ATRIBUIRE (echipaAtribuita = echipaMea) " <<"\n";
     Echipa echipaAtribuita("Echipa Initiala", 99); // O echipa complet diferita
-    std::cout << "   Inainte : " << echipaAtribuita << "\n";
+    std::cout << "   Inainte : \n " << echipaAtribuita << "\n";
 
     echipaAtribuita = echipaMea; // Apeleaza Echipa& operator=(const Echipa& alta)
 
-    std::cout << "   Dupa : " << echipaAtribuita << "\n";
+    std::cout << "   Dupa : \n " << echipaAtribuita << "\n";
     return 0;
 }
