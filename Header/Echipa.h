@@ -4,8 +4,8 @@
  #include <utility>
  #include <vector>
  #include "Jucator.h"
- #include <limits> // necesar pentru validarea inputului (std::numeric_limits)
- #include <iomanip> // NOU: Adăugat pentru std::fixed și std::setprecision
+ #include <limits>   // necesar pentru validarea inputului (std::numeric_limits)
+ #include <iomanip> // pentru std::fixed si std::setprecision
 
 class Echipa {
 private:
@@ -13,8 +13,8 @@ private:
     int m_obiectiv; // locul minim in clasament
     int m_puncteClasament{};
     int m_puncteUpgrade{};
-    int m_nivelStadion{}; // nivelul stadionului (ex: 1, 2, 3...)
-    int m_moral{};        // moralul echipei (0-100)
+    int m_nivelStadion{}; // nivelul stadionului (ex: 0,1, 2, 3...)
+    int m_moral{50};        // moralul echipei (0-100)
 
     std::vector<Jucator> m_portari;
     std::vector<Jucator> m_fundasi;
@@ -81,8 +81,7 @@ private:
             if (!(std::cin >> indexAles)) {
                 std::cout << "Eroare: Introduceti un numar.\n";
                 std::cin.clear(); // reseteaza starea de eroare a std::cin
-                // Curata buffer-ul de input (goleste ce a fost scris gresit)
-                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');// Curata buffer-ul de input (goleste ce a fost scris gresit)
             } else if (indexAles < 1 || indexAles > static_cast<int>(jucatori.size())) {
                 // verific daca nr este in intervalul corespunzator jucatorilor pe care ii am in lot
                 std::cout << "Eroare: Numarul trebuie sa fie intre 1 si " << jucatori.size() << ".\n";
@@ -106,10 +105,24 @@ private:
 public:
     [[nodiscard]] std::string getNume() const { return this->m_nume; }
     [[nodiscard]] int getPuncteUpgrade() const { return this->m_puncteUpgrade; }
-   // [[nodiscard]] int getPuncteClasament() const { return this->m_puncteClasament; }
+    [[nodiscard]] int getPuncteClasament() const { return this->m_puncteClasament; }
     [[nodiscard]] int getObiectiv() const { return this->m_obiectiv; }
-   // [[nodiscard]] int getNivelStadion() const { return this->m_nivelStadion; }
-   // [[nodiscard]] int getMoral() const { return this->m_moral; }
+    [[nodiscard]] int getNivelStadion() const { return this->m_nivelStadion; }
+    [[nodiscard]] int getMoral() const { return this->m_moral; }
+
+    //noi getters care sa ma ajute la simularea golurilor din meci
+    [[nodiscard]] double getRatingAtac() const {
+        return calculeazaMediePozitie(m_atacanti);
+    }
+    [[nodiscard]] double getRatingMijloc() const {
+        return calculeazaMediePozitie(m_mijlocasi);
+    }
+    [[nodiscard]] double getRatingAparare() const {
+        return calculeazaMediePozitie(m_fundasi);
+    }
+    [[nodiscard]] double getRatingPortar() const {
+        return calculeazaMediePozitie(m_portari);
+    }
 
 [[nodiscard]] double getOVR() const
 {

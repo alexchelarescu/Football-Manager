@@ -19,10 +19,6 @@ public:
         return this->m_nume;
     }
 
-    /*[[nodiscard]] int getVarsta() const {
-        return this->m_varsta;
-    }*/
-
     [[nodiscard]] PozitieJucator getPozitie() const {
         return this->m_pozitie;
     }
