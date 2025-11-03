@@ -252,7 +252,7 @@ void gestioneazaAntrenament() {
            << " | Nivel Stadion: " << e.m_nivelStadion;
 
         // partea de lot (compunerea apelurilor)
-        // logica mutata din afiseazaLot care a fost sterarsa
+        // logica mutata din afiseazaLot care a fost stearsa
         os << "\n\n LOTUL ECHIPEI: " << e.m_nume << " (OVR: " << e.calculeazaOVR() << ") \n";
 
         os << "\n PORTARI (" << e.m_portari.size() << ") \n";
