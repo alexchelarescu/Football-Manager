@@ -105,7 +105,7 @@ private:
 public:
     [[nodiscard]] std::string getNume() const { return this->m_nume; }
     [[nodiscard]] int getPuncteUpgrade() const { return this->m_puncteUpgrade; }
-    [[nodiscard]] int getPuncteClasament() const { return this->m_puncteClasament; }
+    //[[nodiscard]] int getPuncteClasament() const { return this->m_puncteClasament; }
     [[nodiscard]] int getObiectiv() const { return this->m_obiectiv; }
     [[nodiscard]] int getNivelStadion() const { return this->m_nivelStadion; }
     [[nodiscard]] int getMoral() const { return this->m_moral; }
