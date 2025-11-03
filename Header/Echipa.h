@@ -58,7 +58,7 @@ private:
         }
     }
 
-    // helper privat pentru antrenament manual
+    // helper privat pentru antrenament
     static void antreneazaJucatorSelectat(std::vector<Jucator>& jucatori, const std::string& numePozitie) {
         if (jucatori.empty()) {
             std::cout << " Nu exista jucatori pe pozitia: " << numePozitie << "\n";
@@ -195,9 +195,6 @@ void gestioneazaAntrenament() {
     std::cout << "\n Noul OVR al echipei este: " << std::fixed << std::setprecision(2) << this->getOVR() << "\n\n";
 }
 
-// ȘTERS: Funcția afiseazaLot() a fost eliminată
-// void afiseazaLot() const { ... }
-
 [[nodiscard]] bool verificaObiectiv(int pozitieInClasament) const {
     return pozitieInClasament <= this->m_obiectiv;
 }
@@ -244,21 +241,19 @@ void gestioneazaAntrenament() {
     //  op<< acum contine si sumarul si lotul
     friend std::ostream& operator<<(std::ostream& os, const Echipa& e)
     {
-        // set la formatarea OVR-ului
+        //nu folosesc getters pt ca am acces direct la atribute(functie friend)
         os << std::fixed << std::setprecision(2);
-        os << "Echipa: " << e.getNume()<<"\n"
-           << "  OVR: " << e.getOVR()
-           << " | Obiectiv: Loc " << e.getObiectiv()<<"\n"
-           << "  Puncte: " << e.getPuncteClasament()
-           << " | Puncte Upgrade: " << e.getPuncteUpgrade()<<"\n"
-           << "  Moral: " << e.getMoral() << "/100 "
-           << " | Nivel Stadion: " << e.getNivelStadion();
-
-
+        os << "Echipa: " << e.m_nume << "\n"
+           << "  OVR: " << e.calculeazaOVR()
+           << " | Obiectiv: Loc " << e.m_obiectiv << "\n"
+           << "  Puncte: " << e.m_puncteClasament
+           << " | Puncte Upgrade: " << e.m_puncteUpgrade << "\n"
+           << "  Moral: " << e.m_moral << "/100 "
+           << " | Nivel Stadion: " << e.m_nivelStadion;
 
         // partea de lot (compunerea apelurilor)
-        // logica mutata din afiseazaLot poate respect cerinta cu op<<
-        os << "\n\n LOTUL ECHIPEI: " << e.m_nume << " (OVR: " << e.getOVR() << ") \n"; // OVR formatat
+        // logica mutata din afiseazaLot care a fost sterarsa
+        os << "\n\n LOTUL ECHIPEI: " << e.m_nume << " (OVR: " << e.calculeazaOVR() << ") \n";
 
         os << "\n PORTARI (" << e.m_portari.size() << ") \n";
         for (const Jucator& j : e.m_portari) { os << "  " << j << "\n"; }

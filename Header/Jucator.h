@@ -46,26 +46,20 @@ public:
         if (this->m_varsta < 16) this->m_varsta = 16;
     }
 
-    // Implementare operator<<
     friend std::ostream& operator<<(std::ostream& os, const Jucator& j)
     {
-        os << "[" << j.getPozitieCaString() << "] "
-           << j.m_nume
-           << " (OVR: " << j.m_ovr << ")"
-           << " - Varsta: " << j.m_varsta;
-        return os;
-    }
-
-private:
-    [[nodiscard]] std::string getPozitieCaString() const
-    {
-        switch (this->m_pozitie)
+        os << "[";
+        switch (j.m_pozitie) // nici aici nu am nev de getters pt ca am acces direct
         {
-            case PozitieJucator::PORTAR:  return "Portar";
-            case PozitieJucator::FUNDAS:  return "Fundas";
-            case PozitieJucator::MIJLOCAS: return "Mijlocas";
-            case PozitieJucator::ATACANT: return "Atacant";
-            default:                      return "Necunoscuta";
+            case PozitieJucator::PORTAR:  os << "Portar"; break;
+            case PozitieJucator::FUNDAS:  os << "Fundas"; break;
+            case PozitieJucator::MIJLOCAS: os << "Mijlocas"; break;
+            case PozitieJucator::ATACANT: os << "Atacant"; break;
+            default:                      os << "Necunoscuta"; break;
         }
+        os << "] ";
+
+        os << j.m_nume<< " (OVR: " << j.m_ovr << ")" << " - Varsta: " << j.m_varsta;
+        return os;
     }
 };
