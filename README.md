@@ -27,7 +27,6 @@ Fotbalul înseamnă evoluție. După fiecare meci jucat, indiferent de rezultat,
 ### 3. Modulul Tactic
 Aici intervine adevărata muncă de manager. Înainte de fiecare meci, vei avea posibilitatea să îți ajustezi tactica pentru a te adapta la circumstanțe. Deciziile tale trebuie să ia în considerare:
 * **Adversarul:** Este o echipă ofensivă sau defensivă? Care sunt punctele lor slabe?
-* **Arbitrul:** Cât de sever este arbitrul meciului? Un arbitru strict ar putea impune un joc mai puțin agresiv pentru a evita cartonașele.
 * **Locația Meciului:** Joci **acasă**, cu avantajul terenului propriu, sau în **deplasare**, unde presiunea este mai mare?
 
 ### Tema 0

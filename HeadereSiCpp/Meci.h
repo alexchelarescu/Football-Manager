@@ -24,8 +24,6 @@ public:
     void simuleaza();
 
     [[nodiscard]] std::string toString() const;
-    [[nodiscard]] int getGoluriGazda() const { return m_scorGazda; }
-    [[nodiscard]] int getGoluriOaspete() const { return m_scorOaspete; }
 
     friend std::ostream& operator<<(std::ostream& os, const Meci& m);
 };
