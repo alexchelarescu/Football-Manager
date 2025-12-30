@@ -18,8 +18,8 @@ public:
     virtual void aplicaEfectTactic(double& atac, double& mijloc, double& aparare) const = 0;
     [[nodiscard]] virtual std::unique_ptr<Tactica> clone() const = 0;
 
-    [[nodiscard]] std::string getNumeTactica() const { return m_nume; }
-    [[nodiscard]] std::string getDescriereTactica() const { return m_descriere; }
+    [[nodiscard]] const std::string& getNumeTactica() const { return m_nume; }
+    [[nodiscard]] const std::string& getDescriereTactica() const { return m_descriere; }
 };
 
 // classele derivate

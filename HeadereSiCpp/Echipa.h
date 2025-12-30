@@ -31,7 +31,7 @@ public:
     [[nodiscard]] double calculeazaOvrEchipa() const;
     [[nodiscard]] const Jucator& gasesteStarulEchipei() const;
 
-    [[nodiscard]] std::string getNume() const { return m_nume; }
+    [[nodiscard]] const std::string& getNume() const { return m_nume; }
     [[nodiscard]] int getPuncteClasament() const { return m_puncteClasament; }
     [[nodiscard]] int getMoral() const { return m_moral; }
     [[nodiscard]] int getNivelStadion() const { return m_nivelStadion; }
