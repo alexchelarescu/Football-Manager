@@ -7,6 +7,10 @@ set(MAIN_EXECUTABLE_NAME "${MAIN_PROJECT_NAME}")
 
 
 project(${MAIN_PROJECT_NAME})
+
+#Am avut eroare compatibilitate CMake < 3.5 pentru bibliotecile externe
+set(CMAKE_POLICY_VERSION_MINIMUM 3.5)
+
 # set(CMAKE_PROJECT_VERSION_MAJOR 0)
 # set(CMAKE_PROJECT_VERSION_MINOR 0)
 # set(CMAKE_PROJECT_VERSION_PATCH 1)
@@ -22,11 +26,18 @@ include(cmake/CopyHelper.cmake)
 ###############################################################################
 
 # external dependencies with FetchContent
-# include(FetchContent)
-#
+include(FetchContent) # MODIFICARE: Activare FetchContent
+
 # set(FETCHCONTENT_QUIET OFF)
 # set(FETCHCONTENT_UPDATES_DISCONNECTED ON)
-#
+
+# Declararea bibliotecilor externe
+FetchContent_Declare(json GIT_REPOSITORY https://github.com/nlohmann/json.git GIT_TAG v3.11.2)
+FetchContent_Declare(fmt GIT_REPOSITORY https://github.com/fmtlib/fmt.git GIT_TAG 10.1.1)
+FetchContent_Declare(indicators GIT_REPOSITORY https://github.com/p-ranav/indicators.git GIT_TAG v2.3)
+
+FetchContent_MakeAvailable(json fmt indicators)
+
 # NOTE: Also update env vars used for caching in
 #         - .github/actions/configure-cmake/action.yml
 #         - .github/workflows/cmake.yml
@@ -49,11 +60,20 @@ include(cmake/CopyHelper.cmake)
 
 # NOTE: update executable name in .github/workflows/cmake.yml:25 when changing name here
 add_executable(${MAIN_EXECUTABLE_NAME}
-    main.cpp
-        Header/Echipa.h
-        Header/Jucator.h
-        Header/PozitieJucator.h
-        Header/Meci.h
+        HeadereSiCpp/Echipa.h
+        HeadereSiCpp/Jucator.h
+        HeadereSiCpp/PozitieJucator.h
+        HeadereSiCpp/Meci.h
+        HeadereSiCpp/Jucator.cpp
+        HeadereSiCpp/Exceptii.h
+        HeadereSiCpp/Tactica.h
+        HeadereSiCpp/Tactica.cpp
+        HeadereSiCpp/Echipa.cpp
+        HeadereSiCpp/Meci.cpp
+        HeadereSiCpp/Liga.h
+        HeadereSiCpp/Liga.cpp
+        HeadereSiCpp/exceptii.cpp
+        HeadereSiCpp/main.cpp
 )
 
 # NOTE: Add all defined targets (e.g. executables, libraries, etc. )
@@ -69,7 +89,15 @@ set_compiler_flags(RUN_SANITIZERS TRUE TARGET_NAMES ${MAIN_EXECUTABLE_NAME})
 # target_include_directories(${MAIN_EXECUTABLE_NAME} SYSTEM PRIVATE ext/<SomeHppLib>/include)
 # target_include_directories(${MAIN_EXECUTABLE_NAME} SYSTEM PRIVATE ${<SomeLib>_SOURCE_DIR}/include)
 # target_link_directories(${MAIN_EXECUTABLE_NAME} PRIVATE ${<SomeLib>_BINARY_DIR}/lib)
-# target_link_libraries(${MAIN_EXECUTABLE_NAME} <SomeLib>)
+
+target_include_directories(${MAIN_EXECUTABLE_NAME} SYSTEM PRIVATE
+        ${json_SOURCE_DIR}/include
+        ${fmt_SOURCE_DIR}/include
+        ${indicators_SOURCE_DIR}/include
+)
+
+#Link-uri bibliotecilor externe
+target_link_libraries(${MAIN_EXECUTABLE_NAME} PRIVATE nlohmann_json::nlohmann_json fmt::fmt indicators::indicators)
 
 ###############################################################################
 
@@ -80,6 +108,6 @@ if(APPLE)
     install(FILES launcher.command DESTINATION ${DESTINATION_DIR})
 endif()
 
-copy_files(FILES tastatura.txt COPY_TO_DESTINATION TARGET_NAME ${MAIN_EXECUTABLE_NAME})
+copy_files(FILES tastatura.txt league_config.json echipe.json COPY_TO_DESTINATION TARGET_NAME ${MAIN_EXECUTABLE_NAME})
 # copy_files(FILES tastatura.txt config.json DIRECTORY images sounds COPY_TO_DESTINATION TARGET_NAME ${MAIN_EXECUTABLE_NAME})
 # copy_files(DIRECTORY images sounds COPY_TO_DESTINATION TARGET_NAME ${MAIN_EXECUTABLE_NAME})
