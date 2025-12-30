@@ -1,3 +1,4 @@
-cmake/* linguist-vendored
-scripts/* linguist-vendored
-launcher.command linguist-vendored
+
+ext/** linguist-vendored
+cmake/** linguist-vendored
+CMakeLists.txt linguist-vendored
