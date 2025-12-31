@@ -47,7 +47,7 @@ int main() {
         size_t nrEchipe = superliga.getNumarEchipe();
         if (nrEchipe == 0) throw EroareDateInvalide("fisierul nu contine echipe.");
 
-        afiseazaTutorial();
+        afiseazaTutorial();//afisez tutorialul la inceput, dar poate fi apelat oricand e nevoie din meniu, daca e nevoie
 
         fmt::print(fmt::emphasis::bold | fg(fmt::color::gold), "\n* SELECTEAZA ECHIPA  *\n");
         for (size_t i = 0; i < nrEchipe; ++i) {
