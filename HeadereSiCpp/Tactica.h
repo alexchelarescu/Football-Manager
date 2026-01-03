@@ -3,6 +3,7 @@
 
 #include <string>
 #include <memory>
+#include <iostream>
 
 //clasa de baza din care o sa plece derivatele
 class Tactica {
