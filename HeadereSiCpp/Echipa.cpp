@@ -5,6 +5,13 @@
 #include <utility>
 #include <algorithm>
 #include <iomanip>
+#include <limits> //asta e necesar pentru curatarea inputului in functia interactiva
+
+int Echipa::m_nrEchipe = 0;
+
+int Echipa::getNrEchipe() {
+    return m_nrEchipe;
+}
 
 Echipa::Echipa(std::string nume, std::unique_ptr<Tactica> tacticaInitiala):
     m_nume(std::move(nume)),
@@ -13,6 +20,7 @@ Echipa::Echipa(std::string nume, std::unique_ptr<Tactica> tacticaInitiala):
     if (m_nume.empty()) {
         throw EroareDateInvalide("Numele echipei nu poate fi vid.");
     }
+    m_nrEchipe++;
 }
 
 Echipa::Echipa(const Echipa& alta):
@@ -24,7 +32,12 @@ Echipa::Echipa(const Echipa& alta):
     {
         m_tactica = alta.m_tactica->clone();
     }
-    }
+    m_nrEchipe++;
+}
+
+Echipa::~Echipa() {
+    m_nrEchipe--;
+}
 
 Echipa& Echipa::operator=(Echipa alta) {
     swap(*this, alta);
@@ -64,8 +77,9 @@ void Echipa::upgradeStadion() {
 void Echipa::adaugaRezultatMeci(int puncte, int bonus) {
     m_puncteClasament += puncte;
     m_puncteUpgrade += bonus;
-    if (puncte == 3) { m_moral = std::min(100, m_moral + 5); }
+    if (puncte == 3) { m_moral = std::min(100, m_moral + 10); }
     else if (puncte == 0) { m_moral = std::max(0, m_moral - 5); }
+    else if (puncte == 1) { m_moral = std::min(100, m_moral + 2); }
 }
 
 double Echipa::calculeazaOvrEchipa() const {
@@ -87,6 +101,26 @@ void Echipa::antreneazaJucator(size_t index) {
     m_lot[index].imbunatatesteOVR(1);
 }
 
+// functiei pentru antrenament interactiv
+void Echipa::antreneazaJucatorInteractiv() {
+    fmt::print("\nSelecteaza jucatorul pentru antrenament:\n");
+    for (size_t i = 0; i < m_lot.size(); ++i) {
+        fmt::print("{:>2}. {:<25} (OVR {})\n", i + 1, m_lot[i].getNume(), m_lot[i].getOVR());
+    }
+
+    int indexJ = -1;
+    while (indexJ < 1 || indexJ > static_cast<int>(m_lot.size())) {
+        fmt::print("Numar jucator (1-{}): ", m_lot.size());
+        if (!(std::cin >> indexJ)) {
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            continue;
+        }
+    }
+    antreneazaJucator(static_cast<size_t>(indexJ - 1));
+    fmt::print("{} a fost antrenat. Noul lui ovr este {}\n", m_lot[static_cast<size_t>(indexJ - 1)].getNume(), m_lot[static_cast<size_t>(indexJ - 1)].getOVR());
+}
+
 void Echipa::pregatesteRatingMeci(double& a, double& m, double& d, double& p) const {
     int na = 0, nm = 0, nd = 0;
     a = m = d = p = 0;
@@ -103,7 +137,7 @@ void Echipa::pregatesteRatingMeci(double& a, double& m, double& d, double& p) co
     if (nd > 0) { d /= nd; }
     if (m_tactica) { m_tactica->aplicaEfectTactic(a, m, d); }
     a += (m_moral / 100.0) * 5.0 + m_nivelStadion * 2.0;
-    d += m_nivelStadion * 2.0;
+    d +=(m_moral / 100.0) * 3.0 + m_nivelStadion * 2.0;
 }
 
 void Echipa::afiseazaLotDetaliat() const {
@@ -131,9 +165,14 @@ std::ostream& operator<<(std::ostream& os, const Echipa& e) {
     os << std::setw(60) << std::setfill('-') << "" << "\n";
     os << "  > OVR ECHIPA:     " << std::fixed << std::setprecision(1) << e.calculeazaOvrEchipa() << "\n";
     os << "  > Starul echipei: " << star.getNume() << " (OVR " << star.getOVR() << ")\n";
-    os << "  > Tactica actuala: " << e.m_tactica->getNumeTactica() << "\n";
-    os << "  > Stil de joc:    " << e.m_tactica->getDescriereTactica() << "\n";
+
+    //apel afisare virtuala prin NVI
+    os << "  > ";
+    if (e.m_tactica) e.m_tactica->afiseaza(os);
+    os << "\n";
+
     os << "  > PUNCTE LIGA:    " << e.m_puncteClasament << "\n";
+    os << "  > PUNCTE UPGRADE: " << e.m_puncteUpgrade << "\n";
     os << "  > MORAL: " << e.m_moral << "/100\n";
     os << "  > NIVEL STADION:  " << e.m_nivelStadion << "\n";
     os << std::setw(60) << std::setfill('=') << "" << std::setfill(' ') << "\n";

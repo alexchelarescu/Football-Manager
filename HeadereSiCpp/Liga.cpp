@@ -42,7 +42,9 @@ void Liga::genereazaCalendar()  {
 
     for (int etapa = 0; etapa < n - 1; ++etapa) {
         std::vector<ProgramMeci> meciuriEtapa;
-        for (int i = 0; i < n / 2; ++i) meciuriEtapa.push_back({indici[i], indici[n-1-i]});
+        for (int i = 0; i < n / 2; ++i) {
+            meciuriEtapa.emplace_back(indici[i], indici[n-1-i]);
+        }
         m_calendar.push_back(meciuriEtapa);
         std::rotate(indici.begin() + 1, indici.end() - 1, indici.end());
     }
@@ -50,7 +52,9 @@ void Liga::genereazaCalendar()  {
     size_t nrTur = m_calendar.size();
     for (size_t i = 0; i < nrTur; ++i) {
         std::vector<ProgramMeci> retur;
-        for (const auto& m : m_calendar[i]) retur.push_back({m.indexOaspete, m.indexGazda});
+        for (const auto& m : m_calendar[i]) {
+            retur.emplace_back(m.getIndexOaspete(), m.getIndexGazda());
+        }
         m_calendar.push_back(retur);
     }
 }
@@ -61,17 +65,18 @@ void Liga::simuleazaEtapaCompleta() {
         return;
     }
 
-    fmt::print(fmt::emphasis::bold | fg(fmt::color::white), "\n*  REZULTATE ETAPA {}  *\n", m_etapaCurenta + 1);
+    fmt::print(fmt::emphasis::bold | fg(fmt::color::white), "\n* REZULTATE ETAPA {}  *\n", m_etapaCurenta + 1);
 
     const auto& meciuri = m_calendar[m_etapaCurenta];
     for (size_t i = 0; i < meciuri.size(); ++i) {
-        Meci m(m_echipe[meciuri[i].indexGazda], m_echipe[meciuri[i].indexOaspete]);
+        Meci m(m_echipe[meciuri[i].getIndexGazda()], m_echipe[meciuri[i].getIndexOaspete()]);
         m.simuleaza();
         fmt::print("  # {:<2} | {}\n", i + 1, m.toString());
     }
     fmt::print(fg(fmt::color::spring_green), "\nToate meciurile au fost procesate!\n");
     m_etapaCurenta++;
 }
+
 bool Liga::esteSezonIncheiat() const {
     return m_etapaCurenta >= static_cast<int>(m_calendar.size());
 }
@@ -85,8 +90,16 @@ void Liga::afiseazaClasamentComplet() const {
 
     fmt::print("\n{:<25} {:<10} {:<10}\n", "Echipa", "Puncte", "Stadion");
     fmt::print("{:-^50}\n", "");
+    int poz=1;
     for (const auto& e : clasament) {
-        fmt::print("{:<25} {:<10} Lvl {:<10}\n", e.getNume(), e.getPuncteClasament(), e.getNivelStadion());
+        fmt::print("{:<5} {:<25} {:<10} Lvl {:<10}\n", poz++, e.getNume(), e.getPuncteClasament(), e.getNivelStadion());
+    }
+}
+
+void Liga::afiseazaListaEchipe() const {
+    fmt::print(fmt::emphasis::bold | fg(fmt::color::gold), "\n* SELECTEAZA ECHIPA  *\n");
+    for (size_t i = 0; i < m_echipe.size(); ++i) {
+        fmt::print("{:>2}. {}\n", i + 1, m_echipe[i].getNume());
     }
 }
 

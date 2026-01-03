@@ -36,6 +36,15 @@ void Meci::simuleaza() {
     m_gazda.pregatesteRatingMeci(atacG, midG, defG, portarG);
     m_oaspete.pregatesteRatingMeci(atacO, midO, defO, portarO);
 
+    //aici am facut downcast
+    // daca gazda foloseste o tactica ofensiva, primeste un bonus de agresivitate la inceputul meciului
+    //ii ofer o sansa in plus sa inscrie, adica 11 in loc de 10
+    if (dynamic_cast<const TacticaOfensiva*>(m_gazda.getTacticaPtr())) {
+        if (calculeazaSansa(atacG, defO)) {
+            m_scorGazda++;
+        }
+    }
+
     //avantajul terenului propriu influentat de stadion
     atacG += (m_gazda.getNivelStadion() * 2.0) + 3.0;
     defG += (m_gazda.getNivelStadion() * 2.0) + 3.0;
@@ -59,17 +68,18 @@ void Meci::simuleaza() {
     }
     if (m_scorGazda > m_scorOaspete) {
         m_gazda.adaugaRezultatMeci(3, 10);  // pt victorie: +3 pct, +10 puncte upgrade/moral
-        m_oaspete.adaugaRezultatMeci(0, -5); // pt infrangere: 0 pct, -5 moral
+        m_oaspete.adaugaRezultatMeci(0, 2); // pt infrangere: 0 pct, +2 moral
     } else if (m_scorGazda < m_scorOaspete) {
         m_oaspete.adaugaRezultatMeci(3, 10);
-        m_gazda.adaugaRezultatMeci(0, -5);
+        m_gazda.adaugaRezultatMeci(0, 2);
     } else {
-        m_gazda.adaugaRezultatMeci(1, 2);   //pt egal: +1 pct, +2 puncte upgrade
-        m_oaspete.adaugaRezultatMeci(1, 2);
+        m_gazda.adaugaRezultatMeci(1, 5);   //pt egal: +1 pct, +5 puncte upgrade
+        m_oaspete.adaugaRezultatMeci(1, 5);
     }
 
     m_simulat = true;
 }
+
 std::string Meci::toString() const {
 
     return fmt::format("{:<20} {:>2} - {:<2} {:>20}",

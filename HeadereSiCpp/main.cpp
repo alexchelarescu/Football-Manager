@@ -49,13 +49,11 @@ int main() {
 
         afiseazaTutorial();//afisez tutorialul la inceput, dar poate fi apelat oricand e nevoie din meniu, daca e nevoie
 
-        fmt::print(fmt::emphasis::bold | fg(fmt::color::gold), "\n* SELECTEAZA ECHIPA  *\n");
-        for (size_t i = 0; i < nrEchipe; ++i) {
-            fmt::print("{:>2}. {}\n", i + 1, superliga.getEchipaDupaIndex(i).getNume());
-        }
+        superliga.afiseazaListaEchipe();
 
         int alegereEchipa = -1;
         while (alegereEchipa < 1 || alegereEchipa > static_cast<int>(nrEchipe)) {
+            fmt::print(fg(fmt::color::cyan), "\nSistemul a detectat {} echipe incarcate cu succes.\n", Echipa::getNrEchipe());
             fmt::print("\nNumar echipa (1-{}): ", nrEchipe);
             if (!(std::cin >> alegereEchipa)) { curataInput(); continue; }
         }
@@ -74,16 +72,17 @@ int main() {
             switch (optiune) {
                 case 1: std::cout << "\n" << echipaMea << "\n"; break;
                 case 2: {
-                    fmt::print("\n1. Ofensiv | 2. Defensiv | 3. Echilibrat\n");
+                    fmt::print("\n1. Ofensiv | 2. Defensiv | 3. Echilibrat | 4. Contraatac\n");
                     int t; std::cin >> t;
                     if (t == 1) echipaMea.schimbaTactica(std::make_unique<TacticaOfensiva>());
                     else if (t == 2) echipaMea.schimbaTactica(std::make_unique<TacticaDefensiva>());
-                    else echipaMea.schimbaTactica(std::make_unique<TacticaEchilibrata>());
+                    else if (t == 3) echipaMea.schimbaTactica(std::make_unique<TacticaEchilibrata>());
+                    else if (t == 4) echipaMea.schimbaTactica(std::make_unique<TacticaContraatac>());
                     break;
                 }
                 case 3:
                     try { echipaMea.upgradeStadion(); fmt::print("Stadion modernizat!\n"); }
-                    catch (const std::exception& e) { fmt::print(fg(fmt::color::red), "{}\n", e.what()); }
+                    catch (const ManagerEroare& e) { fmt::print(fg(fmt::color::red), "{}\n", e.what()); }
                     break;
 
                 case 4: {
@@ -112,18 +111,7 @@ int main() {
                         }
 
                         if (optAntrenament == 1) {
-                            const auto& lot = echipaMea.getLot();
-                            fmt::print("\nSelecteaza jucatorul pentru antrenament:\n");
-                            for (size_t i = 0; i < lot.size(); ++i) {
-                                fmt::print("{:>2}. {:<25} (OVR {})\n", i + 1, lot[i].getNume(), lot[i].getOVR());
-                            }
-
-                            int indexJ = -1;
-                            while (indexJ < 1 || indexJ > static_cast<int>(lot.size())) {
-                                fmt::print("Numar jucator (1-{}): ", lot.size());
-                                if (!(std::cin >> indexJ)) { curataInput(); continue; }
-                            }
-                            echipaMea.antreneazaJucator(static_cast<size_t>(indexJ - 1));
+                            echipaMea.antreneazaJucatorInteractiv();
                             decizieLuata = true;
                         } else if (optAntrenament == 2) {
                             fmt::print("Antrenament omis.\n");
@@ -142,6 +130,8 @@ int main() {
                 default: fmt::print(fg(fmt::color::red), "Optiune invalida.\n");
             }
         }
+    } catch (const ManagerEroare& e) {
+        fmt::print(fg(fmt::color::orange), "\n[EROARE JOC] {}\n", e.what());
     } catch (const std::exception& e) {
         fmt::print(fg(fmt::color::crimson), "\n[EROARE CRITICA] {}\n", e.what());
     }

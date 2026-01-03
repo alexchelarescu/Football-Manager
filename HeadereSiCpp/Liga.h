@@ -5,10 +5,15 @@
 #include <string>
 #include "Echipa.h"
 
-struct ProgramMeci {
-    int indexGazda;
-    int indexOaspete;
-};//sper ca am voie cu struct, pe git s-a precizat fara atribute publice in clase, nu s-a mentionat nimic de struct ;)
+class ProgramMeci {
+private:
+    int m_indexGazda;
+    int m_indexOaspete;
+public:
+    ProgramMeci(int gazda, int oaspete) : m_indexGazda(gazda), m_indexOaspete(oaspete) {}
+    [[nodiscard]] int getIndexGazda() const { return m_indexGazda; }
+    [[nodiscard]] int getIndexOaspete() const { return m_indexOaspete; }
+};
 
 class Liga {
 private:
@@ -26,6 +31,8 @@ public:
 
     void simuleazaEtapaCompleta();
     void afiseazaClasamentComplet() const;
+
+    void afiseazaListaEchipe() const;
 
 
     [[nodiscard]] Echipa& getEchipaDupaIndex(size_t index);
