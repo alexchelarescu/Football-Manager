@@ -45,7 +45,6 @@ public:
     [[nodiscard]] int getPuncteClasament() const { return m_puncteClasament; }
     [[nodiscard]] int getMoral() const { return m_moral; }
     [[nodiscard]] int getNivelStadion() const { return m_nivelStadion; }
-    [[nodiscard]] const std::vector<Jucator>& getLot() const { return m_lot; }
 
     friend std::ostream& operator<<(std::ostream& os, const Echipa& e);
 };

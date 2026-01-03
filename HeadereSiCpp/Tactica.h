@@ -3,7 +3,6 @@
 
 #include <string>
 #include <memory>
-#include <iostream>
 
 //clasa de baza din care o sa plece derivatele
 class Tactica {
@@ -25,8 +24,7 @@ public:
     virtual void aplicaEfectTactic(double& atac, double& mijloc, double& aparare) const = 0;
     [[nodiscard]] virtual std::unique_ptr<Tactica> clone() const = 0;
 
-    [[nodiscard]] const std::string& getNumeTactica() const { return m_nume; }
-    [[nodiscard]] const std::string& getDescriereTactica() const { return m_descriere; }
+
 };
 
 // classele derivate
