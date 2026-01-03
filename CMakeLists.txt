@@ -74,6 +74,8 @@ add_executable(${MAIN_EXECUTABLE_NAME}
         HeadereSiCpp/Liga.cpp
         HeadereSiCpp/exceptii.cpp
         HeadereSiCpp/main.cpp
+        HeadereSiCpp/Meniu.h
+        HeadereSiCpp/Meniu.cpp
 )
 
 # NOTE: Add all defined targets (e.g. executables, libraries, etc. )
