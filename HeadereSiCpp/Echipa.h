@@ -48,6 +48,7 @@ public:
     Echipa(std::string nume, std::unique_ptr<Tactica> tacticaInitiala, int obiectiv);
     void oferaFeedbackConducere(int pozitieCurenta) const;
 
+    //[[nodiscard]] int getObiectiv() const { return m_locObiectiv; }
     [[nodiscard]] double calculeazaOvrEchipa() const;
     [[nodiscard]] const Jucator& gasesteStarulEchipei() const;
 
