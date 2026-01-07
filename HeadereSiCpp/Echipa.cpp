@@ -69,6 +69,7 @@ swap(prima.m_tactica, aDoua.m_tactica);
 Echipa& Echipa::operator=(const Echipa& alta) {
     if (this != &alta) {
         Echipa temp(alta);
+        using std::swap;
         swap(*this, temp);
     }
     return *this;

@@ -51,4 +51,5 @@ public:
 
     friend std::ostream& operator<<(std::ostream& os, const Echipa& e);
 };
+void swap(Echipa& prima, Echipa& aDoua) noexcept;
 #endif
