@@ -4,12 +4,14 @@
 
 class Meniu {
 private:
-    void curataInput();
-    void afiseazaTutorial();
+    static void curataInput();
+
+    static void afiseazaTutorial();
 
 public:
     Meniu() = default;
-    void run();
+
+    static void run();
 };
 
 #endif
