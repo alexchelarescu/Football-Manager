@@ -1,6 +1,7 @@
 [
   {
     "nume": "FCSB",
+    "obiectiv": 1,
     "jucatori": [
       {"nume": "Zima", "varsta": 23, "pozitie": "GK", "ovr": 68},
       {"nume": "Tarnovanu", "varsta": 21, "pozitie": "GK", "ovr": 72},
@@ -32,6 +33,7 @@
   },
   {
     "nume": "Craiova",
+    "obiectiv": 1,
     "jucatori": [
       {"nume": "Pigliacelli", "varsta": 28, "pozitie": "GK", "ovr": 71},
       {"nume": "Lazar", "varsta": 30, "pozitie": "GK", "ovr": 69},
@@ -62,6 +64,7 @@
   },
   {
     "nume": "Dinamo",
+    "obiectiv": 6,
     "jucatori": [
       {"nume": "Figueiredo", "varsta": 30, "pozitie": "GK", "ovr": 65},
       {"nume": "Esanu", "varsta": 22, "pozitie": "GK", "ovr": 63},
@@ -95,6 +98,7 @@
   },
   {
     "nume": "CFR",
+    "obiectiv": 1,
     "jucatori": [
       {"nume": "Hindrich", "varsta": 18, "pozitie": "GK", "ovr": 61},
       {"nume": "Balgradean", "varsta": 33, "pozitie": "GK", "ovr": 69},
@@ -125,6 +129,7 @@
   },
   {
     "nume": "Farul",
+    "obiectiv": 6,
     "jucatori": [
       {"nume": "Aioani", "varsta": 22, "pozitie": "GK", "ovr": 69},
       {"nume": "Branescu", "varsta": 27, "pozitie": "GK", "ovr": 61},
@@ -155,6 +160,7 @@
   },
   {
     "nume": "Slobozia",
+    "obiectiv": 12,
     "jucatori": [
       {"nume": "Popa", "varsta": 20, "pozitie": "GK", "ovr": 64},
       {"nume": "Rimniceanu", "varsta": 31, "pozitie": "GK", "ovr": 63},
@@ -186,6 +192,7 @@
   },
   {
     "nume": "Rapid",
+    "obiectiv": 3,
     "jucatori": [
       {"nume": "Moldovan", "varsta": 23, "pozitie": "GK", "ovr": 66},
       {"nume": "Draghia", "varsta": 30, "pozitie": "GK", "ovr": 58},
@@ -218,6 +225,7 @@
   },
   {
     "nume": "Csikszereda",
+    "obiectiv": 12,
     "jucatori": [
       {"nume": "Niczuly", "varsta": 26, "pozitie": "GK", "ovr": 68},
       {"nume": "Began", "varsta": 24, "pozitie": "GK", "ovr": 57},
@@ -248,6 +256,7 @@
   },
   {
     "nume": "Chindia",
+    "obiectiv": 10,
     "jucatori": [
       {"nume": "Cabuz", "varsta": 25, "pozitie": "GK", "ovr": 65},
       {"nume": "Moldovan", "varsta": 31, "pozitie": "GK", "ovr": 63},
@@ -281,6 +290,7 @@
   },
   {
     "nume": "Botosani",
+    "obiectiv": 8,
     "jucatori": [
       {"nume": "Pap", "varsta": 27, "pozitie": "GK", "ovr": 67},
       {"nume": "Contra", "varsta": 21, "pozitie": "GK", "ovr": 53},
@@ -311,6 +321,7 @@
   },
   {
     "nume": "Arges",
+    "obiectiv": 10,
     "jucatori": [
       {"nume": "Greab", "varsta": 29, "pozitie": "GK", "ovr": 65},
       {"nume": "Croitoru", "varsta": 28, "pozitie": "GK", "ovr": 62},
@@ -342,6 +353,7 @@
   },
   {
     "nume": "UTA",
+    "obiectiv": 8,
     "jucatori": [
       {"nume": "Iacob", "varsta": 27, "pozitie": "GK", "ovr": 67},
       {"nume": "Balauru", "varsta": 31, "pozitie": "GK", "ovr": 61},
@@ -371,6 +383,7 @@
   },
   {
     "nume": "Metaloglobus",
+    "obiectiv": 12,
     "jucatori": [
       {"nume": "Popa", "varsta": 19, "pozitie": "GK", "ovr": 62},
       {"nume": "Cobrea", "varsta": 30, "pozitie": "GK", "ovr": 59},
@@ -400,6 +413,7 @@
   },
   {
     "nume": "Hermanstadt",
+    "obiectiv": 10,
     "jucatori": [
       {"nume": "Popescu", "varsta": 27, "pozitie": "GK", "ovr": 61},
       {"nume": "Sima", "varsta": 23, "pozitie": "GK", "ovr": 54},
@@ -433,6 +447,7 @@
   },
   {
     "nume": "Petrolul",
+    "obiectiv": 10,
     "jucatori": [
       {"nume": "Ureche", "varsta": 22, "pozitie": "GK", "ovr": 59},
       {"nume": "Bolboasa", "varsta": 31, "pozitie": "GK", "ovr": 57},
@@ -465,6 +480,7 @@
   },
   {
     "nume": "Otelul",
+    "obiectiv": 10,
     "jucatori": [
       {"nume": "Bumbar", "varsta": 16, "pozitie": "GK", "ovr": 49},
       {"nume": "Buzbuchi", "varsta": 27, "pozitie": "GK", "ovr": 64},

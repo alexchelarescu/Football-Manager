@@ -25,13 +25,28 @@ void Liga::incarcaDinJSON(const std::string& caleConfig, const std::string& cale
     json jE; fE >> jE;
 
     for (const auto& item : jE) {
-        Echipa echipa(item["nume"], std::make_unique<TacticaEchilibrata>());
+        int obiectivEchipa = item.value("obiectiv", 5);
+        Echipa echipa(item["nume"], std::make_unique<TacticaEchilibrata>(), obiectivEchipa);
         for (const auto& j : item["jucatori"]) {
             echipa.adaugaJucator(Jucator(j["nume"], j["varsta"], stringToPozitie(j["pozitie"]), j["ovr"]));
         }
-        m_echipe.push_back(std::move(echipa)) ;
+
+        m_echipe.push_back(std::move(echipa));
     }
     genereazaCalendar();
+}
+int Liga::getLocInClasament(const std::string& numeEchipa) const {
+    std::vector<Echipa> clasament = m_echipe;
+    std::ranges::sort(clasament, [](const Echipa& a, const Echipa& b) {
+        if (a.getPuncteClasament() != b.getPuncteClasament())
+            return a.getPuncteClasament() > b.getPuncteClasament();
+        return a.getMoral() > b.getMoral();
+    });
+
+    for (size_t i = 0; i < clasament.size(); ++i) {
+        if (clasament[i].getNume() == numeEchipa) return static_cast<int>(i + 1);
+    }
+    return -1;
 }
 
 void Liga::genereazaCalendar()  {

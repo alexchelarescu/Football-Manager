@@ -13,9 +13,10 @@ int Echipa::getNrEchipe() {
     return m_nrEchipe;
 }
 
-Echipa::Echipa(std::string nume, std::unique_ptr<Tactica> tacticaInitiala):
+Echipa::Echipa(std::string nume, std::unique_ptr<Tactica> tacticaInitiala, int obiectiv):
     m_nume(std::move(nume)),
-    m_tactica(std::move(tacticaInitiala))
+    m_tactica(std::move(tacticaInitiala)),
+    m_locObiectiv(obiectiv)
     {
     if (m_nume.empty()) {
         throw EroareDateInvalide("Numele echipei nu poate fi vid.");
@@ -26,7 +27,8 @@ Echipa::Echipa(std::string nume, std::unique_ptr<Tactica> tacticaInitiala):
 Echipa::Echipa(const Echipa& alta):
     m_nume(alta.m_nume), m_puncteClasament(alta.m_puncteClasament),
     m_puncteUpgrade(alta.m_puncteUpgrade), m_moral(alta.m_moral),
-    m_nivelStadion(alta.m_nivelStadion), m_lot(alta.m_lot)
+    m_nivelStadion(alta.m_nivelStadion), m_lot(alta.m_lot),
+    m_locObiectiv(alta.m_locObiectiv)
     {
     if (alta.m_tactica)
     {
@@ -35,24 +37,39 @@ Echipa::Echipa(const Echipa& alta):
     m_nrEchipe++;
 }
 
+// Constructor de mutare (Move Constructor) - necesar pentru Regula celor 5 si std::ranges::sort
+Echipa::Echipa(Echipa&& alta) noexcept :
+    m_nume(std::move(alta.m_nume)),
+    m_puncteClasament(alta.m_puncteClasament),
+    m_puncteUpgrade(alta.m_puncteUpgrade),
+    m_moral(alta.m_moral),
+    m_nivelStadion(alta.m_nivelStadion),
+    m_tactica(std::move(alta.m_tactica)),
+    m_lot(std::move(alta.m_lot)),
+    m_locObiectiv(alta.m_locObiectiv)
+{
+    m_nrEchipe++;
+}
+
 Echipa::~Echipa() {
     m_nrEchipe--;
 }
 
-Echipa& Echipa::operator=(Echipa alta) {
-    swap(*this, alta);
+// Operator de atribuire prin copiere
+Echipa& Echipa::operator=(const Echipa& alta) {
+    if (this != &alta) {
+        Echipa temp(alta);
+        swap(*this, temp);
+    }
     return *this;
 }
 
-void swap(Echipa& prima, Echipa& aDoua) noexcept {
-    using std::swap;
-    swap(prima.m_nume, aDoua.m_nume);
-    swap(prima.m_puncteClasament, aDoua.m_puncteClasament);
-    swap(prima.m_puncteUpgrade, aDoua.m_puncteUpgrade);
-    swap(prima.m_moral, aDoua.m_moral);
-    swap(prima.m_nivelStadion, aDoua.m_nivelStadion);
-    swap(prima.m_lot, aDoua.m_lot);
-    swap(prima.m_tactica, aDoua.m_tactica);
+// Operator de atribuire prin mutare
+Echipa& Echipa::operator=(Echipa&& alta) noexcept {
+    if (this != &alta) {
+        swap(*this, alta);
+    }
+    return *this;
 }
 
 void Echipa::adaugaJucator(const Jucator& j) {
@@ -121,6 +138,24 @@ void Echipa::antreneazaJucatorInteractiv() {
     fmt::print("{} a fost antrenat. Noul lui ovr este {}\n", m_lot[static_cast<size_t>(indexJ - 1)].getNume(), m_lot[static_cast<size_t>(indexJ - 1)].getOVR());
 }
 
+// Noua functie pentru feedback-ul de la conducere
+void Echipa::oferaFeedbackConducere(int pozitieCurenta) const {
+    fmt::print(fmt::emphasis::bold, "\n>>> RAPORT CONDUCERE - {} <<<\n", m_nume);
+    fmt::print("Obiectiv sezon: Locul {}\n", m_locObiectiv);
+    fmt::print("Loc actual:     Locul {}\n", pozitieCurenta);
+
+    if (pozitieCurenta <= m_locObiectiv) {
+        fmt::print(fg(fmt::color::green), "Mesaj: Esti un geniu tactic bai baiatule! Sampania e la rece si sefu' a uitat deja ca ne-a taiat primele luna trecuta.\n"
+            "       Suntem pe cai mari, nimic nu ne poate opri!!\n");
+    } else if (pozitieCurenta - m_locObiectiv == 1) {
+        fmt::print(fg(fmt::color::yellow), "Mesaj: Sefu' zice ca e 'ok', dar stii cum e el...\n"
+            "       Ai grija,daca nu castigam etapa viitoare, s-ar putea sa inceapa sa dea declaratii la televizor despre 'schimbari necesare',mers la biserica si alea ale lui...\n");
+    } else {
+        fmt::print(fg(fmt::color::red), "Mesaj: Aoleu, Mister! E groasa! Seful a inceput sa caute pe Google 'cum se reziliaza un contract fara despagubiri'.\n"
+            "       Daca nu castigi etapa viitoare, s-ar putea sa iti gasesti lucrurile intr-o sacosa la poarta stadionului!\n");
+    }
+}
+
 void Echipa::pregatesteRatingMeci(double& a, double& m, double& d, double& p) const {
     int na = 0, nm = 0, nd = 0;
     a = m = d = p = 0;
@@ -135,9 +170,11 @@ void Echipa::pregatesteRatingMeci(double& a, double& m, double& d, double& p) co
     if (na > 0) { a /= na; }
     if (nm > 0) { m /= nm; }
     if (nd > 0) { d /= nd; }
-    if (m_tactica) { m_tactica->aplicaEfectTactic(a, m, d); }
-    a += (m_moral / 100.0) * 5.0 + m_nivelStadion * 2.0;
-    d +=(m_moral / 100.0) * 3.0 + m_nivelStadion * 2.0;
+
+    // Apelul tacticii folosind acum 5 parametri (include moralul si stadionul)
+    if (m_tactica) {
+        m_tactica->aplicaEfectTactic(a, m, d, m_moral, m_nivelStadion);
+    }
 }
 
 void Echipa::afiseazaLotDetaliat() const {
@@ -158,13 +195,18 @@ void Echipa::afiseazaLotDetaliat() const {
 }
 
 std::ostream& operator<<(std::ostream& os, const Echipa& e) {
-    const Jucator& star = e.gasesteStarulEchipei();
-
     os << "\n" << std::setw(60) << std::setfill('=') << "" << "\n";
     os << "  REZUMAT ECHIPA: " << e.m_nume << "\n";
     os << std::setw(60) << std::setfill('-') << "" << "\n";
     os << "  > OVR ECHIPA:     " << std::fixed << std::setprecision(1) << e.calculeazaOvrEchipa() << "\n";
-    os << "  > Starul echipei: " << star.getNume() << " (OVR " << star.getOVR() << ")\n";
+
+    // Verificam daca lotul e gol pentru a evita crash-ul in gasesteStarulEchipei
+    if (e.m_lot.empty()) {
+        os << "  > Starul echipei: N/A\n";
+    } else {
+        const Jucator& star = e.gasesteStarulEchipei();
+        os << "  > Starul echipei: " << star.getNume() << " (OVR " << star.getOVR() << ")\n";
+    }
 
     //apel afisare virtuala prin NVI
     os << "  > ";
@@ -175,6 +217,7 @@ std::ostream& operator<<(std::ostream& os, const Echipa& e) {
     os << "  > PUNCTE UPGRADE: " << e.m_puncteUpgrade << "\n";
     os << "  > MORAL: " << e.m_moral << "/100\n";
     os << "  > NIVEL STADION:  " << e.m_nivelStadion << "\n";
+    os << "  > OBIECTIV SEZON: Locul " << e.m_locObiectiv << "\n";
     os << std::setw(60) << std::setfill('=') << "" << std::setfill(' ') << "\n";
     return os;
 }

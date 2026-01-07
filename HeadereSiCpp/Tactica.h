@@ -21,11 +21,13 @@ public:
     // Interfata Non-Virtuala (NVI) pentru afisare
     void afiseaza(std::ostream& os) const;
 
-    //aici am metode Virtuale Pure
-    virtual void aplicaEfectTactic(double& atac, double& mijloc, double& aparare) const = 0;
+    //aici am metode Virtuale Pure (am crescut complexitatea din derivate)
+    virtual void aplicaEfectTactic(double& atac, double& mijloc, double& aparare, int moral, int nivelStadion) const = 0;
+
+    // fiecare tactica gestioneaza diferit evoluția moralului si a resurselor( poate acum se justifica derivatele)
+    virtual void aplicaEfectPostMeci(int puncteObtinute, int& moral, int& puncteUpgrade) const = 0;
+
     [[nodiscard]] virtual std::unique_ptr<Tactica> clone() const = 0;
-
-
 };
 
 // classele derivate
@@ -34,7 +36,8 @@ protected:
     void do_afisare(std::ostream& os) const override;
 public:
     TacticaOfensiva();
-    void aplicaEfectTactic(double& atac, double& mijloc, double& aparare) const override;
+    void aplicaEfectTactic(double& atac, double& mijloc, double& aparare, int moral, int nivelStadion) const override;
+    void aplicaEfectPostMeci(int puncteObtinute, int& moral, int& puncteUpgrade) const override;
     [[nodiscard]] std::unique_ptr<Tactica> clone() const override;
 };
 
@@ -43,7 +46,8 @@ protected:
     void do_afisare(std::ostream& os) const override;
 public:
     TacticaDefensiva();
-    void aplicaEfectTactic(double& atac, double& mijloc, double& aparare) const override;
+    void aplicaEfectTactic(double& atac, double& mijloc, double& aparare, int moral, int nivelStadion) const override;
+    void aplicaEfectPostMeci(int puncteObtinute, int& moral, int& puncteUpgrade) const override;
     [[nodiscard]] std::unique_ptr<Tactica> clone() const override;
 };
 
@@ -52,7 +56,8 @@ protected:
     void do_afisare(std::ostream& os) const override;
 public:
     TacticaEchilibrata();
-    void aplicaEfectTactic(double& atac, double& mijloc, double& aparare) const override;
+    void aplicaEfectTactic(double& atac, double& mijloc, double& aparare, int moral, int nivelStadion) const override;
+    void aplicaEfectPostMeci(int puncteObtinute, int& moral, int& puncteUpgrade) const override;
     [[nodiscard]] std::unique_ptr<Tactica> clone() const override;
 };
 
@@ -62,7 +67,8 @@ protected:
     void do_afisare(std::ostream& os) const override;
 public:
     TacticaContraatac();
-    void aplicaEfectTactic(double& atac, double& mijloc, double& aparare) const override;
+    void aplicaEfectTactic(double& atac, double& mijloc, double& aparare, int moral, int nivelStadion) const override;
+    void aplicaEfectPostMeci(int puncteObtinute, int& moral, int& puncteUpgrade) const override;
     [[nodiscard]] std::unique_ptr<Tactica> clone() const override;
 };
 

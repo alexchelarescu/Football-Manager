@@ -33,8 +33,7 @@ public:
     void afiseazaClasamentComplet() const;
 
     void afiseazaListaEchipe() const;
-
-
+    [[nodiscard]] int getLocInClasament(const std::string& numeEchipa) const;
     [[nodiscard]] Echipa& getEchipaDupaIndex(size_t index);
     [[nodiscard]] size_t getNumarEchipe() const;
     [[nodiscard]] bool esteSezonIncheiat() const;

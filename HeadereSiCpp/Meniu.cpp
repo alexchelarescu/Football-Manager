@@ -64,7 +64,8 @@ void Meniu::run() {
     int optiune = -1;
     while (optiune != 0) {
         fmt::print(fmt::emphasis::bold | fg(fmt::color::sky_blue), "\n--- MENIU PRINCIPAL: {} ---\n", echipaMea.getNume());
-        fmt::print("1. Statistici | 2. Tactica | 3. Upgrade | 4. Simuleaza Etapa | 5. Clasament | 6. LOT | 7. Tutorial | 0. Iesire\n");
+
+        fmt::print("1. Statistici | 2. Tactica | 3. Upgrade | 4. Simuleaza Etapa | 5. Clasament | 6. LOT | 7. Tutorial | 8. Feedback Conducere | 0. Iesire\n");
         fmt::print("Alegere: ");
 
         if (!(std::cin >> optiune)) { curataInput(); continue; }
@@ -111,7 +112,6 @@ void Meniu::run() {
                     }
 
                     if (optAntrenament == 1) {
-                        // Functie de nivel inalt: Echipa gestioneaza intern selectia si UI-ul lotului
                         echipaMea.antreneazaJucatorInteractiv();
                         decizieLuata = true;
                     } else if (optAntrenament == 2) {
@@ -127,6 +127,11 @@ void Meniu::run() {
             case 5: superliga.afiseazaClasamentComplet(); break;
             case 6: echipaMea.afiseazaLotDetaliat(); break;
             case 7: afiseazaTutorial(); break;
+            case 8: {
+                int locCurent = superliga.getLocInClasament(echipaMea.getNume());
+                echipaMea.oferaFeedbackConducere(locCurent);
+                break;
+            }
             case 0: fmt::print("Inchidere program...\n"); break;
             default: fmt::print(fg(fmt::color::red), "Optiune invalida.\n");
         }
