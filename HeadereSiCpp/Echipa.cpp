@@ -37,7 +37,7 @@ Echipa::Echipa(const Echipa& alta):
     m_nrEchipe++;
 }
 
-// Constructor de mutare (Move Constructor) - necesar pentru Regula celor 5 si std::ranges::sort
+
 Echipa::Echipa(Echipa&& alta) noexcept :
     m_nume(std::move(alta.m_nume)),
     m_puncteClasament(alta.m_puncteClasament),
@@ -55,7 +55,17 @@ Echipa::~Echipa() {
     m_nrEchipe--;
 }
 
-// Operator de atribuire prin copiere
+void swap(Echipa& prima, Echipa& aDoua) noexcept{
+using std::swap;
+swap(prima.m_nume, aDoua.m_nume);
+swap(prima.m_puncteClasament, aDoua.m_puncteClasament);
+swap(prima.m_puncteUpgrade, aDoua.m_puncteUpgrade);
+swap(prima.m_moral, aDoua.m_moral);
+swap(prima.m_nivelStadion, aDoua.m_nivelStadion);
+swap(prima.m_lot, aDoua.m_lot);
+swap(prima.m_tactica, aDoua.m_tactica);
+    }
+
 Echipa& Echipa::operator=(const Echipa& alta) {
     if (this != &alta) {
         Echipa temp(alta);
@@ -64,7 +74,7 @@ Echipa& Echipa::operator=(const Echipa& alta) {
     return *this;
 }
 
-// Operator de atribuire prin mutare
+
 Echipa& Echipa::operator=(Echipa&& alta) noexcept {
     if (this != &alta) {
         swap(*this, alta);
@@ -138,7 +148,7 @@ void Echipa::antreneazaJucatorInteractiv() {
     fmt::print("{} a fost antrenat. Noul lui ovr este {}\n", m_lot[static_cast<size_t>(indexJ - 1)].getNume(), m_lot[static_cast<size_t>(indexJ - 1)].getOVR());
 }
 
-// Noua functie pentru feedback-ul de la conducere
+
 void Echipa::oferaFeedbackConducere(int pozitieCurenta) const {
     fmt::print(fmt::emphasis::bold, "\n>>> RAPORT CONDUCERE - {} <<<\n", m_nume);
     fmt::print("Obiectiv sezon: Locul {}\n", m_locObiectiv);
@@ -171,7 +181,6 @@ void Echipa::pregatesteRatingMeci(double& a, double& m, double& d, double& p) co
     if (nm > 0) { m /= nm; }
     if (nd > 0) { d /= nd; }
 
-    // Apelul tacticii folosind acum 5 parametri (include moralul si stadionul)
     if (m_tactica) {
         m_tactica->aplicaEfectTactic(a, m, d, m_moral, m_nivelStadion);
     }
@@ -200,7 +209,7 @@ std::ostream& operator<<(std::ostream& os, const Echipa& e) {
     os << std::setw(60) << std::setfill('-') << "" << "\n";
     os << "  > OVR ECHIPA:     " << std::fixed << std::setprecision(1) << e.calculeazaOvrEchipa() << "\n";
 
-    // Verificam daca lotul e gol pentru a evita crash-ul in gasesteStarulEchipei
+
     if (e.m_lot.empty()) {
         os << "  > Starul echipei: N/A\n";
     } else {

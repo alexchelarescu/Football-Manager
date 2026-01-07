@@ -23,17 +23,8 @@ public:
     Echipa& operator=(Echipa&& alta) noexcept;
     ~Echipa();
 
-    // definesc inline pe swap pentru a asigura funcționarea corectă cu std::ranges
-    friend void swap(Echipa& prima, Echipa& aDoua) noexcept {
-        using std::swap;
-        swap(prima.m_nume, aDoua.m_nume);
-        swap(prima.m_puncteClasament, aDoua.m_puncteClasament);
-        swap(prima.m_puncteUpgrade, aDoua.m_puncteUpgrade);
-        swap(prima.m_moral, aDoua.m_moral);
-        swap(prima.m_nivelStadion, aDoua.m_nivelStadion);
-        swap(prima.m_lot, aDoua.m_lot);
-        swap(prima.m_tactica, aDoua.m_tactica);
-    }
+
+    friend void swap(Echipa& prima, Echipa& aDoua) noexcept;
 
     static int getNrEchipe();
 
