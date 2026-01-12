@@ -57,13 +57,14 @@ Echipa::~Echipa() {
 
 void swap(Echipa& prima, Echipa& aDoua) noexcept{
 using std::swap;
-swap(prima.m_nume, aDoua.m_nume);
-swap(prima.m_puncteClasament, aDoua.m_puncteClasament);
-swap(prima.m_puncteUpgrade, aDoua.m_puncteUpgrade);
-swap(prima.m_moral, aDoua.m_moral);
-swap(prima.m_nivelStadion, aDoua.m_nivelStadion);
-swap(prima.m_lot, aDoua.m_lot);
-swap(prima.m_tactica, aDoua.m_tactica);
+    swap(prima.m_nume, aDoua.m_nume);
+    swap(prima.m_puncteClasament, aDoua.m_puncteClasament);
+    swap(prima.m_puncteUpgrade, aDoua.m_puncteUpgrade);
+    swap(prima.m_moral, aDoua.m_moral);
+    swap(prima.m_nivelStadion, aDoua.m_nivelStadion);
+    swap(prima.m_lot, aDoua.m_lot);
+    swap(prima.m_tactica, aDoua.m_tactica);
+    swap(prima.m_locObiectiv, aDoua.m_locObiectiv);
     }
 
 Echipa& Echipa::operator=(const Echipa& alta) {
@@ -105,9 +106,9 @@ void Echipa::upgradeStadion() {
 void Echipa::adaugaRezultatMeci(int puncte, int bonus) {
     m_puncteClasament += puncte;
     m_puncteUpgrade += bonus;
-    if (puncte == 3) { m_moral = std::min(100, m_moral + 10); }
-    else if (puncte == 0) { m_moral = std::max(0, m_moral - 5); }
-    else if (puncte == 1) { m_moral = std::min(100, m_moral + 2); }
+    if (m_tactica) {
+        m_tactica->aplicaEfectPostMeci(puncte, m_moral, m_puncteUpgrade);
+    }
 }
 
 double Echipa::calculeazaOvrEchipa() const {
@@ -118,18 +119,23 @@ double Echipa::calculeazaOvrEchipa() const {
 }
 
 const Jucator& Echipa::gasesteStarulEchipei() const {
-    if (m_lot.empty()) throw std::runtime_error("Echipa nu are jucatori!");
+    if (m_lot.empty()) throw EroareDateInvalide("Echipa " + m_nume + " nu are jucatori!");
     return *std::ranges::max_element(m_lot.begin(), m_lot.end(), [](const Jucator& a, const Jucator& b) {
         return a.getOVR() < b.getOVR();
     });
 }
 
 void Echipa::antreneazaJucator(size_t index) {
-    if (index >= m_lot.size()) throw std::out_of_range("Index invalid.");
-    m_lot[index].imbunatatesteOVR(1);
-}
+    if (index >= m_lot.size()) throw EroareDateInvalide("Index invalid.");
 
-// functiei pentru antrenament interactiv
+    //aici transform indexul in iterator
+    auto it = std::next(m_lot.begin(), static_cast<std::vector<Jucator>::difference_type>(index));
+    it->imbunatatesteOVR(1);
+}//am ales varianta asta pentru abstractizare, asa cum s-a mentionat ca e cazul sa folosim la lab
+ //astfel codul devine independent de tipul containerului
+
+
+// functie pentru antrenament interactiv
 void Echipa::antreneazaJucatorInteractiv() {
     fmt::print("\nSelecteaza jucatorul pentru antrenament:\n");
     for (size_t i = 0; i < m_lot.size(); ++i) {
@@ -158,7 +164,7 @@ void Echipa::oferaFeedbackConducere(int pozitieCurenta) const {
     if (pozitieCurenta <= m_locObiectiv) {
         fmt::print(fg(fmt::color::green), "Mesaj: Esti un geniu tactic bai baiatule! Sampania e la rece si sefu' a uitat deja ca ne-a taiat primele luna trecuta.\n"
             "       Suntem pe cai mari, nimic nu ne poate opri!!\n");
-    } else if (pozitieCurenta - m_locObiectiv == 1) {
+    } else if (pozitieCurenta - m_locObiectiv == 1|| pozitieCurenta - m_locObiectiv == 2) {
         fmt::print(fg(fmt::color::yellow), "Mesaj: Sefu' zice ca e 'ok', dar stii cum e el...\n"
             "       Ai grija,daca nu castigam etapa viitoare, s-ar putea sa inceapa sa dea declaratii la televizor despre 'schimbari necesare',mers la biserica si alea ale lui...\n");
     } else {
